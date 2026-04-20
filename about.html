@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Johann Music Archives</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --parchment: #f4efe6;
+      --parchment-deep: #ece5d8;
+      --ink: #2c2418;
+      --ink-light: #5c4f3d;
+      --ink-faint: #8a7e6e;
+      --accent: #8b3a3a;
+      --accent-warm: #b5622a;
+      --gold: #c4a35a;
+      --gold-muted: #b89f6a;
+      --staff-line: rgba(44, 36, 24, 0.12);
+      --shadow-soft: rgba(44, 36, 24, 0.08);
+      --shadow-medium: rgba(44, 36, 24, 0.15);
+    }
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Libre Baskerville', Georgia, serif;
+      background-color: var(--parchment);
+      color: var(--ink);
+      overflow-x: hidden;
+      line-height: 1.7;
+    }
+
+    /* Grain texture overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 1.25rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(to bottom, var(--parchment) 60%, transparent);
+      transition: background 0.4s ease;
+    }
+
+    nav.scrolled {
+      background: var(--parchment);
+      box-shadow: 0 1px 0 var(--staff-line);
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      text-decoration: none;
+      position: relative;
+      padding-bottom: 2px;
+      transition: color 0.3s ease;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 8rem 3rem 4rem 6rem;
+      position: relative;
+    }
+
+    /* Footer */
+    footer {
+      padding: 4rem 6rem;
+      border-top: 1px solid var(--staff-line);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    .footer-brand {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink);
+      margin-bottom: 0.75rem;
+    }
+
+    .footer-tagline {
+      font-size: 0.82rem;
+      color: var(--ink-faint);
+      font-style: italic;
+      max-width: 24rem;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .footer-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--accent);
+    }
+
+    /* Animations */
+    @keyframes fadeSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes floatNote {
+      0%, 100% {
+        opacity: 0.15;
+        transform: translateY(0) rotate(0deg);
+      }
+      50% {
+        opacity: 0.35;
+        transform: translateY(-12px) rotate(5deg);
+      }
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 900px) {
+      nav {
+        padding: 1rem 1.5rem;
+      }
+
+      .nav-links {
+        gap: 1.5rem;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .hero-left {
+        padding: 7rem 2rem 3rem;
+      }
+
+      .hero-right {
+        min-height: 50vh;
+      }
+
+      .stats-bar {
+        padding: 2rem;
+        gap: 2rem;
+        flex-wrap: wrap;
+      }
+
+      .section {
+        padding: 3rem 2rem;
+      }
+
+      .section-header {
+        grid-template-columns: 1fr;
+      }
+
+      .collection-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .collection-card:nth-child(1) {
+        grid-row: span 1;
+      }
+
+      .featured {
+        padding: 4rem 2rem;
+      }
+
+      .timeline {
+        padding: 3rem 2rem;
+      }
+
+      .timeline-item {
+        grid-template-columns: 4rem 1px 1fr;
+        gap: 1.5rem;
+      }
+
+      footer {
+        padding: 3rem 2rem;
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .nav-links {
+        display: none;
+      }
+
+      .hero-title {
+        font-size: 2.4rem;
+      }
+
+      .stats-bar {
+        gap: 1.5rem;
+      }
+
+      .stat-number {
+        font-size: 1.6rem;
+      }
+
+      .featured-quote {
+        font-size: 1.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav id="nav">
+    <a href= index.html class="nav-logo">Johann Music Archives</a>
+    <ul class="nav-links">
+      <li><a href="#collections">Collections</a></li>
+      <li><a href="signup.html">Sign Up</a></li>
+      <li><a href= about.html>About</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero">
+      <div class="hero-left">
+        <h1 class="hero-title">Our Mission</h1>
+        <p class="hero-description">
+          Currently, our school's music directors do not have a free and easy way to save and access the hundreds of pieces of music they have. Therefore, our mission is to help these directors by developing a free source to accomplish such tasks quickly and easily.
+      </p>
+      </div>
+	<img src="C:\Users\shuhe\OneDrive\Desktop\Website\jay.png.png" alt="John Jay Logo" width="462" height="541" style="float: right; margin: 50px;">
+  </section>
+
+  <!-- Footer -->
+  <footer id="about">
+    <div>
+      <div class="footer-brand">Johann Music Archives</div>
+      <p class="footer-tagline">
+        Creating an easy, safe, and efficient way for you to access your music.
+      </p>
+    </div>
+    <!-- <div class="footer-links">
+      <a href="#">Catalogue</a>
+      <a href="#">Research</a>
+      <a href="#">Visits</a>
+      <a href="#">Contact</a>
+    </div> -->
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const revealElements = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+          }, index * 80);
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    revealElements.forEach(el => revealObserver.observe(el));
+
+    // Nav scroll state
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // Smooth anchor scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
