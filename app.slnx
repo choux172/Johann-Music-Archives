@@ -11,10 +11,20 @@ document.getElementById("composerForm").addEventListener("submit", async (e) => 
     const composer_first = document.getElementById("composer_first").value;
     const composer_first = document.getElementById("composer_last").value;
     const title = document.getElementById("title").value;
-    supabase.auth.signInWithPassword({
-        email,
-        password
+    async function login(email, password) {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password
     });
+
+    if (error) {
+      console.log("Login error:", error.message);
+      alert("Login failed: " + error.message);
+      return;
+    }
+
+    alert("Logged in!");
+  }
     const {
         data: { user }
     } = await supabase.auth.getUser();
