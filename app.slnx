@@ -1,6 +1,58 @@
-<Solution>
-  <Project Path="app/app.esproj">
-    <Build />
-    <Deploy />
-  </Project>
-</Solution>
+// Initialize Supabase client
+const supabase = supabase.createClient(
+    "https://oxmfadloxanzkpegffbp.supabase.co",
+    "sb_publishable_ghsuhl5qpil0Jj7dah4rug_Y9mxA0NK"
+);
+
+// Handle form submission
+document.getElementById("composerForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const composer_first = document.getElementById("composer_first").value;
+    const composer_first = document.getElementById("composer_last").value;
+    const title = document.getElementById("title").value;
+    supabase.auth.signInWithPassword({
+        email,
+        password
+    });
+    const {
+        data: { user }
+    } = await supabase.auth.getUser();
+
+    console.log(user.id);
+
+    const { data, error } = await supabase
+        .from("pieces")
+        .select("*")
+        .order("created_at", { ascending: true });
+    // Insert into Supabase
+    const { data, error } = await supabase
+        .from("pieces")
+        .insert([{ composer_first, composer_last, title, user_id: user.id}]);
+
+    if (error) {
+        console.error(error);
+        return;
+    }
+
+    addToGraph(composer_first, composer_last, title);
+});
+
+// Add item to the graph list
+function addToGraph(composer_first, compsoer_last, title) {
+    const li = document.createElement("li");
+    li.textContent = `${composer_first} — ${composer_last} - ${title}`;
+    document.getElementById("graph").appendChild(li);
+}
+
+// Load existing pieces on page load
+window.onload = async () => {
+    const { data, error } = await supabase
+        .from("pieces")
+        .select("*")
+        .order("created_at", { ascending: true });
+
+    if (data) {
+        data.forEach(row => addToGraph(row.composer_first, row.composer_last, row.title));
+    }
+};
