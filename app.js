@@ -3,7 +3,7 @@ const supabase = supabase.createClient(
     "https://oxmfadloxanzkpegffbp.supabase.co",
     "sb_publishable_ghsuhl5qpil0Jj7dah4rug_Y9mxA0NK"
 );
-
+window.client = supabase;
 // Handle form submission
 document.getElementById("composerForm").addEventListener("submit", async (e) => {
     e.preventDefault();
