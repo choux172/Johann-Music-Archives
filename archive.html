@@ -311,26 +311,26 @@
       }
     }
   </style>
-</head>
-<body>
-<head>
-  <title>Composer Graph Creator</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-	<script>
-  		const supabase = supabase.createClient(
-    		"https://oxmfadloxanzkpegffbp.supabase.co",
-    		"sb_publishable_ghsuhl5qpil0Jj7dah4rug_Y9mxA0NK"
-  	);
-</script>
 </head>
-<body>
-<div class="hero-left">
-  <h2>Add Musical Piece</h2>
 
-  <form id="composerFirst">
+<body>
+  <!-- Navigation -->
+  <nav id="nav">
+    <a href= index.html class="nav-logo">Johann Music Archives</a>
+    <ul class="nav-links">
+      <li><a href="#collections">Collections</a></li>
+      <li><a href="signup.html">Sign Up</a></li>
+      <li><a href= about.html>About</a></li>
+    </ul>
+  </nav>
+<section class="hero">
+   <div class="hero-left">
+      <h2>Add Musical Piece</h2>
+
+  <form id="composerForm">
     <label>Composer First Name:</label>
     <input type="text" id="composer_first" required><br><br>
-<form id="composerLast">
     <label>Composer Last Name:</label>
     <input type="text" id="composer_last" required><br><br>
 
@@ -341,21 +341,10 @@
     <button type="submit">Add to Database</button>
   </form>
 </div>
+</section>
   <h2>Graph of Composers & Pieces</h2>
   <ul id="graph"></ul>
-
-  <script src="app.slnx"></script>
-</body>
-  <!-- Navigation -->
-  <nav id="nav">
-    <a href= index.html class="nav-logo">Johann Music Archives</a>
-    <ul class="nav-links">
-      <li><a href="#collections">Collections</a></li>
-      <li><a href="signup.html">Sign Up</a></li>
-      <li><a href= about.html>About</a></li>
-    </ul>
-  </nav>
-
+  <script src="app.js"></script>
 
   <!-- Footer -->
   <footer id="about">
