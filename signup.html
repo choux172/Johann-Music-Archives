@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -342,52 +341,9 @@
 </div>
 </section>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  const supabase = supabase.createClient(
-    "https://oxmfadloxanzkpegffbp.supabase.co",
-    "sb_publishable_ghsuhl5qpil0Jj7dah4rug_Y9mxA0NK"
-  );
+<script src="app.js"></script>
 
-  // SIGN UP
-  document.getElementById("signupForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const email = document.getElementById("signupEmail").value;
-    const password = document.getElementById("signupPassword").value;
-
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password
-    });
-
-    if (error) {
-      alert("Signup error: " + error.message);
-    } else {
-      alert("Signup successful. Check your email if verification is required.");
-    }
-  });
-
-  // LOGIN
-  document.getElementById("loginForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const email = document.getElementById("loginEmail").value;
-    const password = document.getElementById("loginPassword").value;
-
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    });
-
-    if (error) {
-      alert("Login error: " + error.message);
-    } else {
-      alert("Logged in successfully.");
-    }
-  });
-</script>
-
-  <!-- Footer -->
+<!-- Footer -->
   <footer id="about">
     <div>
       <div class="footer-brand">Johann Music Archives</div>
@@ -395,12 +351,6 @@
         Creating an easy, safe, and efficient way for you to access your music.
       </p>
     </div>
-    <!-- <div class="footer-links">
-      <a href="#">Catalogue</a>
-      <a href="#">Research</a>
-      <a href="#">Visits</a>
-      <a href="#">Contact</a>
-    </div> -->
   </footer>
 
   <script>
