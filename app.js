@@ -118,6 +118,20 @@ window.onload = async () => {
     }
 };
 
+const searchBar = document.getElementById("searchBar");
+
+if (searchBar) {
+    searchBar.addEventListener("input", () => {
+        const filter = searchBar.value.toLowerCase();
+        const items = document.querySelectorAll("#graph li");
+
+        items.forEach(li => {
+            const text = li.textContent.toLowerCase();
+            li.style.display = text.includes(filter) ? "" : "none";
+        });
+    });
+}
+
 // SIGN UP FORM
 const signupForm = document.getElementById("signupForm");
 
