@@ -113,7 +113,7 @@ window.onload = async () => {
                 row.arranger,
                 row.mpublisher,
                 row.mgrade
-            );
+            )
         );
     }
 };
