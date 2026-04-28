@@ -60,6 +60,9 @@ if (form) {
 
 // ALWAYS load pieces on page load
 window.onload = async () => {
+    // Wait for Supabase to restore the session
+    await client.auth.getSession();
+
     const { data, error } = await client
         .from("pieces")
         .select("*")
