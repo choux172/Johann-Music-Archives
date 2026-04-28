@@ -9,11 +9,35 @@ window.client = client;
 console.log("app.js loaded");
 
 //Make addToGraph available to ALL pages
-function addToGraph(composer_first, composer_last, title, arranger, mpublisher, mgrade) {
+function addToGraph(id, composer_first, composer_last, title, arranger, mpublisher, mgrade) {
     const li = document.createElement("li");
-    li.textContent = `${composer_first} ${composer_last} — ${title} — ${arranger} — ${mpublisher} — ${mgrade}`;
+    li.textContent = `${composer_first} ${composer_last} — ${title} — ${arranger} — ${mpublisher} — ${mgrade} `;
+
+    // Create delete button
+    const btn = document.createElement("button");
+    btn.textContent = "Delete";
+    btn.style.marginLeft = "10px";
+    btn.style.cursor = "pointer";
+
+    // Delete handler
+    btn.onclick = async () => {
+        const { error } = await client
+            .from("pieces")
+            .delete()
+            .eq("id", id);
+
+        if (!error) {
+            li.remove(); // remove from UI
+        } else {
+            console.error(error);
+            alert("Failed to delete.");
+        }
+    };
+
+    li.appendChild(btn);
     document.getElementById("graph").appendChild(li);
 }
+
 
 // Handle form submission ONLY if composerForm exists
 const form = document.getElementById("composerForm");
@@ -47,14 +71,25 @@ if (form) {
                 mpublisher,
                 mgrade,
                 user_id: user.id
-            }]);
+            }])
+            .select(); // <-- this makes Supabase return the inserted row
 
         if (error) {
             console.error(error);
             return;
         }
 
-        addToGraph(composer_first, composer_last, title, arranger, mpublisher, mgrade);
+        const row = data[0];
+
+        addToGraph(
+            row.id,
+            row.composer_first,
+            row.composer_last,
+            row.title,
+            row.arranger,
+            row.mpublisher,
+            row.mgrade
+        );
     });
 }
 
@@ -71,13 +106,14 @@ window.onload = async () => {
     if (data) {
         data.forEach(row =>
             addToGraph(
+                row.id,
                 row.composer_first,
                 row.composer_last,
                 row.title,
                 row.arranger,
                 row.mpublisher,
                 row.mgrade
-            )
+            );
         );
     }
 };
