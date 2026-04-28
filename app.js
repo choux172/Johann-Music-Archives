@@ -4,9 +4,16 @@ const client = supabase.createClient(
     "sb_publishable_ghsuhl5qpil0Jj7dah4rug_Y9mxA0NK"
 );
 
-window.client = client; // expose globally
+window.client = client;
 
 console.log("app.js loaded");
+
+//Make addToGraph available to ALL pages
+function addToGraph(composer_first, composer_last, title, arranger, mpublisher, mgrade) {
+    const li = document.createElement("li");
+    li.textContent = `${composer_first} ${composer_last} — ${title} — ${arranger} — ${mpublisher} — ${mgrade}`;
+    document.getElementById("graph").appendChild(li);
+}
 
 // Handle form submission ONLY if composerForm exists
 const form = document.getElementById("composerForm");
@@ -22,7 +29,6 @@ if (form) {
         const mpublisher = document.getElementById("mpublisher").value;
         const mgrade = document.getElementById("mgrade").value;
 
-        // Get logged-in user
         const { data: userData } = await client.auth.getUser();
         const user = userData.user;
 
@@ -31,10 +37,7 @@ if (form) {
             return;
         }
 
-        console.log("USER:", user.id);
-
-        // Insert into Supabase
-        const { data: insertData, error: insertError } = await client
+        const { data, error } = await client
             .from("pieces")
             .insert([{
                 composer_first,
@@ -46,23 +49,16 @@ if (form) {
                 user_id: user.id
             }]);
 
-        if (insertError) {
-            console.error(insertError);
+        if (error) {
+            console.error(error);
             return;
         }
 
         addToGraph(composer_first, composer_last, title, arranger, mpublisher, mgrade);
     });
-
-    // Add item to the graph list
-    function addToGraph(composer_first, composer_last, title, arranger, mpublisher, mgrade) {
-        const li = document.createElement("li");
-        li.textContent = `${composer_first} ${composer_last} — ${title} — ${arranger} — ${mpublisher} — ${mgrade}`;
-        document.getElementById("graph").appendChild(li);
-    }
-
-    // Load existing pieces on page load
 }
+
+// ALWAYS load pieces on page load
 window.onload = async () => {
     const { data, error } = await client
         .from("pieces")
@@ -71,7 +67,14 @@ window.onload = async () => {
 
     if (data) {
         data.forEach(row =>
-            addToGraph(row.composer_first, row.composer_last, row.title, row.arranger, row.mpublisher, row.mgrade)
+            addToGraph(
+                row.composer_first,
+                row.composer_last,
+                row.title,
+                row.arranger,
+                row.mpublisher,
+                row.mgrade
+            )
         );
     }
 };
@@ -86,10 +89,7 @@ if (signupForm) {
         const email = document.getElementById("signupEmail").value;
         const password = document.getElementById("signupPassword").value;
 
-        const { data, error } = await client.auth.signUp({
-            email,
-            password
-        });
+        const { data, error } = await client.auth.signUp({ email, password });
 
         if (error) {
             alert(error.message);
@@ -120,7 +120,6 @@ if (loginForm) {
             return;
         }
 
-        // Redirect to archive page after login
         window.location.href = "archive.html";
     });
 }
