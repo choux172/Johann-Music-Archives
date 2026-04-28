@@ -18,6 +18,9 @@ if (form) {
         const composer_first = document.getElementById("composer_first").value;
         const composer_last = document.getElementById("composer_last").value;
         const title = document.getElementById("title").value;
+        const arranger = document.getElementById("arranger").value;
+        const mpublisher = document.getElementById("mpublisher").value;
+        const mgrade = document.getElementById("mgrade").value;
 
         // Get logged-in user
         const { data: userData } = await client.auth.getUser();
@@ -37,6 +40,9 @@ if (form) {
                 composer_first,
                 composer_last,
                 title,
+                arranger,
+                mpublisher,
+                mgrade,
                 user_id: user.id
             }]);
 
@@ -45,30 +51,30 @@ if (form) {
             return;
         }
 
-        addToGraph(composer_first, composer_last, title);
+        addToGraph(composer_first, composer_last, title, arranger, mpublisher, mgrade);
     });
 
     // Add item to the graph list
-    function addToGraph(composer_first, composer_last, title) {
+    function addToGraph(composer_first, composer_last, title, arranger) {
         const li = document.createElement("li");
-        li.textContent = `${composer_first} ${composer_last} — ${title}`;
+        li.textContent = `${composer_first} ${composer_last} — ${title} - ${arranger} - ${mpublisher} - ${mgrade}`;
         document.getElementById("graph").appendChild(li);
     }
 
     // Load existing pieces on page load
-    window.onload = async () => {
-        const { data, error } = await client
-            .from("pieces")
-            .select("*")
-            .order("created_at", { ascending: true });
-
-        if (data) {
-            data.forEach(row =>
-                addToGraph(row.composer_first, row.composer_last, row.title)
-            );
-        }
-    };
 }
+window.onload = async () => {
+    const { data, error } = await client
+        .from("pieces")
+        .select("*")
+        .order("created_at", { ascending: true });
+
+    if (data) {
+        data.forEach(row =>
+            addToGraph(row.composer_first, row.composer_last, row.title, row.arranger, row.mpublisher, row.mgrade)
+        );
+    }
+};
 
 // SIGN UP FORM
 const signupForm = document.getElementById("signupForm");
