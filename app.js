@@ -55,9 +55,9 @@ if (form) {
     });
 
     // Add item to the graph list
-    function addToGraph(composer_first, composer_last, title, arranger) {
+    function addToGraph(composer_first, composer_last, title, arranger, mpublisher, mgrade) {
         const li = document.createElement("li");
-        li.textContent = `${composer_first} ${composer_last} — ${title} - ${arranger} - ${mpublisher} - ${mgrade}`;
+        li.textContent = `${composer_first} ${composer_last} — ${title} — ${arranger} — ${mpublisher} — ${mgrade}`;
         document.getElementById("graph").appendChild(li);
     }
 
