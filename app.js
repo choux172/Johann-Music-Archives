@@ -9,9 +9,9 @@ window.client = client;
 console.log("app.js loaded");
 
 //Make addToGraph available to ALL pages
-function addToGraph(id, composer_first, composer_last, title, arranger, mpublisher, mgrade) {
+function addToGraph(id, composer_first, composer_last, title, arranger, mpublisher, mgrade, lnumber) {
     const li = document.createElement("li");
-    li.textContent = `${composer_first} ${composer_last} — ${title} — ${arranger} — ${mpublisher} — ${mgrade} `;
+    li.textContent = `${composer_first} ${composer_last} — ${title} — ${arranger} — ${mpublisher} — ${mgrade} - ${lnumber}`;
 
     // Create delete button
     const btn = document.createElement("button");
@@ -52,6 +52,7 @@ if (form) {
         const arranger = document.getElementById("arranger").value;
         const mpublisher = document.getElementById("mpublisher").value;
         const mgrade = document.getElementById("mgrade").value;
+        const lnumber = document.getElementById("lnumber").value;
 
         const { data: userData } = await client.auth.getUser();
         const user = userData.user;
@@ -70,6 +71,7 @@ if (form) {
                 arranger,
                 mpublisher,
                 mgrade,
+                lnumber,
                 user_id: user.id
             }])
             .select(); // <-- this makes Supabase return the inserted row
@@ -88,7 +90,8 @@ if (form) {
             row.title,
             row.arranger,
             row.mpublisher,
-            row.mgrade
+            row.mgrade,
+            row.lnumber
         );
     });
 }
@@ -112,7 +115,8 @@ window.onload = async () => {
                 row.title,
                 row.arranger,
                 row.mpublisher,
-                row.mgrade
+                row.mgrade,
+                row.lnumber
             )
         );
     }
